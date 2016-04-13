@@ -45,11 +45,14 @@ class PlaceAdTableViewController: UITableViewController, UITextFieldDelegate, UI
         
         self.presentViewController(myActionSheet, animated: true, completion: nil);
     }
-    @IBOutlet weak var uploadPhotos: UIButton!
+
+    @IBOutlet weak var adTitle: UITextField!
     @IBOutlet weak var myImageView: UIImageView!
     @IBOutlet weak var addPhotosButton: UIButton!
     @IBOutlet weak var adDescription: UITextView!
+    @IBOutlet weak var adPrice: UITextField!
     
+    @IBOutlet weak var phoneNumber: UITextField!
     @IBOutlet weak var nearestTownTextView: UITextField!
     
     @IBOutlet weak var countyTextView: UITextField!

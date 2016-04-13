@@ -12,14 +12,15 @@ import AlamofireImage
 
 class AdCell: UICollectionViewCell {
 
-    @IBOutlet weak var adTitleLabel: UILabel!
-    @IBOutlet weak var adPriceLabel: UILabel!
-    @IBOutlet weak var adImageView: UIImageView!
-    @IBOutlet weak var adAge: UILabel!
-    
 
-    @IBOutlet weak var adLocationLabel: UILabel!
+
+    @IBOutlet weak var adTitleLabel: UILabel!
     
+    @IBOutlet weak var adPriceLabel: UILabel!
+    
+    @IBOutlet weak var adImageView: UIImageView!
+    @IBOutlet weak var adLocationLabel: UILabel!
+    @IBOutlet weak var adAgeLabel: UILabel!
     
     override func prepareForReuse() {
         self.adImageView.image = nil

@@ -31,6 +31,8 @@ class AdBrowser: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
+    
+    
 
     var adModels = [Ad]() // array of ad models that the collection view will use to build up the UI
     var adPrice = ""
@@ -78,7 +80,7 @@ class AdBrowser: UIViewController {
         }
         
         Alamofire.request(.POST, urlString, parameters: requestParams, encoding: .JSON)
-            .responseJSON { response in
+            .responseJSON { response in                
                 if let JSON = response.result.value as? [String: AnyObject], ads = JSON["ads"] as? [[String: AnyObject]] {
                     self.parseSearchResults(ads)
                     self.collectionView.reloadData()
@@ -152,6 +154,30 @@ extension AdBrowser: UICollectionViewDataSource, UICollectionViewDelegate {
 extension AdBrowser: UISearchBarDelegate {
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         fetchSearchResultsWithText(searchText: searchBar.text)
+    }
+    
+    
+}
+
+extension AdBrowser {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "AdDetailsSegue" {
+            if let adCell = sender as? AdCell {
+                // 1. get the indexPath of the cell
+                let indexPath = self.collectionView.indexPathForCell(adCell)
+                if let row = indexPath?.row where row < self.adModels.count  {
+                    // 2. get the model for the selected cell
+                    let adModel = self.adModels[row]
+                    
+                    // 3. get a reference to the viewController we're moving to
+                    let adDetailsViewController = segue.destinationViewController as? AdDetailsViewController
+                    
+                    // 4. pass in the ad id into the adDetailsViewController
+                    adDetailsViewController?.adId = adModel.id
+                }
+            }
+        }
     }
 }
 
