@@ -1,0 +1,2394 @@
+	AppDelegate
+
+//
+//  AppDelegate.swift DDProto
+// //
+//  Created by Joe O'Leary on 18/11/2015. Copyright © 2015 Joe O'Leary.
+//  All rights reserved.
+// //
+// //
+import UIKit
+
+@UIApplicationMain class AppDelegate: UIResponder, UIApplicationDelegate
+{
+
+    var window: UIWindow?
+
+
+    func application(application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?)
+    -> Bool {
+        // Override point for customization after application launch.
+        return true
+    }
+    }
+    func applicationWillResignActive(application: UIApplication) {
+        // Sent when the application is about to move from active to
+        // inactive state. This can occur for certain types of temporary
+        // interruptions (such as an incoming phone call or SMS message)
+        // or when the user quits the application and it begins the
+        // transition to the background state. Use this method to pause
+        // ongoing tasks, disable timers, and throttle down OpenGL ES
+        // frame rates. Games should use this method to pause the game.
+        //     }
+        //     }
+    func applicationDidEnterBackground(application: UIApplication) {
+        // Use this method to release shared resources, save user data,
+        // invalidate timers, and store enough application state
+        // information to restore your application to its current state
+        // in case it is terminated later. If your application supports
+        // background execution, this method is called instead of
+        // applicationWillTerminate: when the user quits.
+        //     }
+        //     }
+    func applicationWillEnterForeground(application: UIApplication) {
+        // Called as part of the transition from the background to the
+        // inactive state; here you can undo many of the changes made on
+        // entering the background.
+        //     }
+        //     }
+    func applicationDidBecomeActive(application: UIApplication) {
+        // Restart any tasks that were paused (or not yet started) while
+        // the application was inactive. If the application was
+        // previously in the background, optionally refresh the user
+        // interface.
+        //     }
+        //     }
+    func applicationWillTerminate(application: UIApplication) {
+        // Called when the application is about to terminate. Save data
+        // if appropriate. See also applicationDidEnterBackground:.
+        //     }
+        //     }
+      
+      MapViewController
+        
+//
+//  MapViewController.swift DDProto
+// //
+//  Created by joe on 26/01/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit import MapKit import CoreLocation
+
+class MapViewController: UIViewController, MKMapViewDelegate,
+CLLocationManagerDelegate {
+
+    @IBOutlet weak var mapView: MKMapView!
+
+    @IBOutlet weak var myAddressView: UILabel!
+
+    @IBOutlet weak var myAddressView1: UILabel! @IBOutlet weak var
+    myAddressView2: UILabel! @IBOutlet weak var myLocationView: UILabel!
+
+
+    @IBAction func imSomewhereElse(sender: AnyObject) {
+
+        navigationController?.popViewControllerAnimated(true)
+    }
+    }
+    }
+    }
+    let locationManager = CLLocationManager()
+
+    override func viewDidLoad() { super.viewDidLoad()
+
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.startUpdatingLocation()
+
+        self.mapView.showsUserLocation = true
+
+    }
+    }   }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //         //     }
+        //         //     }        //     }
+    // MARK: - Location Delegate Methods
+    // 
+    func locationManager(manager: CLLocationManager, didUpdateLocations
+    locations: [CLLocation]) {
+
+        CLGeocoder().reverseGeocodeLocation(manager.location!,
+        completionHandler: {(placemarks, error)->Void in
+
+            if (error != nil) { print("Error: " +
+            error!.localizedDescription) return
+            }
+            }
+            if placemarks!.count > 0 { let pm = placemarks![0]
+            self.displayLocationInfo(pm)
+            }
+            else { print("Error with the data.")
+            }
+        })
+        }
+        }
+        }
+        let location = locations.last
+
+        let center = CLLocationCoordinate2D(latitude:
+        location!.coordinate.latitude, longitude:
+        location!.coordinate.longitude) let region =
+        MKCoordinateRegion(center: center, span:
+        MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
+
+        self.mapView.setRegion(region, animated: true)
+
+        self.locationManager.stopUpdatingLocation()
+
+        //GPS Coordinates
+        //
+        //
+        //
+        //
+        let locValue:CLLocationCoordinate2D =
+        manager.location!.coordinate print("locations =
+        \(locValue.latitude) \(locValue.longitude)")
+
+        // Your current location is:
+        myLocationView.text = "\(locValue.latitude)" + "\n" + "
+        \(locValue.longitude)"
+    }
+    }
+    }
+    func displayLocationInfo(placemark: CLPlacemark) {
+
+        self.locationManager.stopUpdatingLocation() print(placemark.name)
+     /*   print(placemark.addressDictionary) */
+        print(placemark.locality)
+     /*   print(placemark.postalCode) */
+        print(placemark.administrativeArea) print(placemark.country)
+        print(placemark.addressDictionary)
+
+        // Your current address is:
+        // 
+        // myAddressView.text = /*"\(placemark.name!)"
+        myAddressView.text = "\(placemark.locality!)"
+        myAddressView1.text = "\(placemark.administrativeArea!)"
+        myAddressView2.text = "\(placemark.country!)"
+    }
+    }
+    }
+    func locationManager(manager: CLLocationManager, didFailWithError
+    error: NSError) { print("Error: " + error.localizedDescription)
+    }
+    }
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+
+        let secondVC: PlaceAdTableViewController =
+        segue.destinationViewController as! PlaceAdTableViewController
+
+        secondVC.receivedString = myAddressView.text!
+        secondVC.receivedString1 = myAddressView1.text!
+        secondVC.receivedString2 = myAddressView2.text!
+    }
+    }
+    }}
+    }}        //     }
+    }}        //     }        //     }}
+    }}        //     }        //     }}
+    
+        PlaceAd
+
+//
+//  PlaceAdTableViewController.swift DDProto
+// //
+//  Created by joe on 28/01/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+//,
+//
+import UIKit
+
+class PlaceAdTableViewController: UITableViewController,
+UITextFieldDelegate, UIPickerViewDelegate,
+UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+
+    @IBAction func showActionSheet(sender: AnyObject) { let
+    myActionSheet = UIAlertController(title: "Choose Photo", message:
+    "Select source of photo", preferredStyle:
+    UIAlertControllerStyle.ActionSheet);
+
+        let gallerySelectButtonAction = UIAlertAction(title: "Gallery",
+        style: UIAlertActionStyle.Default) { (ACTION) in let
+        myPickerController = UIImagePickerController()
+        myPickerController.delegate = self;
+        myPickerController.sourceType =
+        UIImagePickerControllerSourceType.PhotoLibrary
+        self.presentViewController(myPickerController, animated: true,
+        completion: nil)
+        }
+        }
+        }
+        let cameraSelectButtonAction = UIAlertAction(title: "Camera",
+        style: UIAlertActionStyle.Default) { (ACTION) in let
+        myPickerController = UIImagePickerController()
+        myPickerController.delegate = self;
+        myPickerController.sourceType =
+        UIImagePickerControllerSourceType.Camera
+        self.presentViewController(myPickerController, animated: true,
+        completion: nil)
+        }
+        }
+        }
+        let cancelButtonAction = UIAlertAction(title: "Cancel", style:
+        UIAlertActionStyle.Cancel) { (ACTION) in print("Cancel button
+        tapped")
+        }
+        }
+        }
+        }
+        myActionSheet.addAction(gallerySelectButtonAction);
+        myActionSheet.addAction(cameraSelectButtonAction);
+        myActionSheet.addAction(cancelButtonAction);
+
+        self.presentViewController(myActionSheet, animated: true,
+        completion: nil);
+    }
+    }
+    @IBOutlet weak var adTitle: UITextField! @IBOutlet weak var
+    myImageView: UIImageView! @IBOutlet weak var addPhotosButton:
+    UIButton! @IBOutlet weak var adDescription: UITextView! @IBOutlet
+    weak var adPrice: UITextField!
+
+    @IBOutlet weak var phoneNumber: UITextField! @IBOutlet weak var
+    nearestTownTextView: UITextField!
+
+    @IBOutlet weak var countyTextView: UITextField!
+
+    var receivedString: String = "" var receivedString1: String = "" var
+    receivedString2: String = ""
+
+
+    override func viewDidLoad() { super.viewDidLoad()
+
+        nearestTownTextView.text = receivedString countyTextView.text =
+        receivedString1
+
+
+            let adDescription = UITextView(frame:
+            CGRectMake(0,0,100,100)) adDescription.layer.cornerRadius =
+            10 adDescription.layer.borderColor =
+            UIColor.purpleColor().CGColor
+            adDescription.layer.borderWidth = 10
+        }
+        }
+        // Uncomment the following line to preserve selection between
+        // presentations self.clearsSelectionOnViewWillAppear = false
+        // 
+        // Uncomment the following line to display an Edit button in the
+        // navigation bar for this view controller.
+        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        // 
+        // 
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+    @IBAction func uploadButtonTapped(sender: AnyObject) {
+
+        //myImageUploadrequest()
+        //
+        //    }
+        //    }
+ /*   @IBAction func selectPhotoButtonTapped(sender: AnyObject) {
+ /
+        var myPickerController = UIImagePickerController()
+        myPickerController.delegate = self;
+        myPickerController.sourceType =
+        UIImagePickerControllerSourceType.PhotoLibrary
+
+        self.presentViewController(myPickerController, animated: true,
+        completion: nil)
+
+    }
+*/
+
+
+
+    func imagePickerController(picker: UIImagePickerController,
+    didFinishPickingMediaWithInfo info: [String : AnyObject])
+
+    { myImageView.image = info[UIImagePickerControllerOriginalImage] as?
+    UIImage
+
+        self.dismissViewControllerAnimated(true, completion: nil)
+
+    }
+    
+    Settings
+    
+//
+//  Settings.swift
+//  DDProto
+//
+//  Created by joe on 04/02/2016.
+//  Copyright © 2016 Joe O'Leary. All rights reserved.
+//
+
+import Foundation
+
+class Settings {
+    var viewPosts = "http://192.168.1.6/posts.json"
+}
+    
+    LoginView
+
+//
+//  LoginViewController.swift DDProto
+// //
+//  Created by joe on 10/02/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class LoginViewController: UIViewController {
+
+    @IBOutlet weak var userEmailTextField: UITextField! @IBOutlet weak
+    var userPasswordTextField: UITextField! override func viewDidLoad()
+    { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        //     }
+        //     }
+    override func touchesBegan(touches: Set<UITouch>, withEvent event:
+    UIEvent?) { self.view.endEditing(true)
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+    @IBAction func loginButtonTapped(sender: AnyObject) {
+
+
+
+        let userEmail = userEmailTextField.text; let userPassword =
+        userPasswordTextField.text;
+
+        self.userEmailTextField.resignFirstResponder()
+        self.userPasswordTextField.resignFirstResponder()
+
+        if userEmail == "" || userPassword == "" {
+        displayMyAlertMessage("All fields are required"); return;
+        }
+        }
+        let myUrl = NSURL(string:
+        "http://192.168.33.10:80/userLogin.php"); let request =
+        NSMutableURLRequest(URL: myUrl!); request.HTTPMethod = "POST";
+
+        let postString = "email=\(userEmail)&password=\(userPassword)";
+        request.HTTPBody =
+        postString.dataUsingEncoding(NSUTF8StringEncoding);
+
+        let task =
+        NSURLSession.sharedSession().dataTaskWithRequest(request) {
+        data, response, error in
+
+            if error != nil { print("error=\(error)") return;
+            }
+            }
+            do { if let json = try
+            NSJSONSerialization.JSONObjectWithData(data!, options:
+            NSJSONReadingOptions.MutableContainers) as? NSDictionary {
+            let resultValue = json["status"] as? String
+
+                    print("result: \(resultValue)")
+
+                    var isUserRegistered:Bool = false;
+                    if(resultValue=="Success") {
+
+                        isUserRegistered = true;
+
+                    } else {
+                        self.displayMyAlertMessage("User is not
+                        registered.") return;
+                    }
+                    }
+                    var messageToDisplay:String = json["message"] as!
+                    String!; if(!isUserRegistered) {
+
+                        messageToDisplay = json["message"] as! String;
+                    }
+                    }
+                    dispatch_async(dispatch_get_main_queue(), {
+
+                        /*let myAlert = UIAlertController(title:"Alert",
+                        /message:messageToDisplay, preferredStyle:
+                        /UIAlertControllerStyle.Alert);
+                        /
+                        let okAction = UIAlertAction(title:"Ok",
+                        style:UIAlertActionStyle.Default) {
+
+                            action in
+                            self.dismissViewControllerAnimated(true,
+                            completion:nil)
+
+                        }
+                        }
+                        myAlert.addAction(okAction) ;
+                        self.presentViewController(myAlert,
+                        animated:true, completion:nil)*/
+
+                        NSUserDefaults.standardUserDefaults().setBool(
+                        true, forKey: "isUserLoggedIn");
+                        NSUserDefaults.standardUserDefaults().
+                        synchronize();
+                        self.dismissViewControllerAnimated(true,
+                        completion: nil)
+
+                    });
+                    }                }
+            } catch let err as NSError {
+                print(err.code)
+            }
+            }
+            }
+            }        }
+            }        }
+        task.resume();
+
+
+
+        /*let userEmailStored =
+        /NSUserDefaults.standardUserDefaults().stringForKey("userEmail");
+        /
+        let userPasswordStored =
+        NSUserDefaults.standardUserDefaults().stringForKey("userPassword
+        ")
+
+        if (userEmailStored == userEmail) {
+
+            if (userPasswordStored == userPassword)
+
+            {
+                // Login successful
+                NSUserDefaults.standardUserDefaults().setBool(true,
+                forKey: "isUserLoggedIn");
+                NSUserDefaults.standardUserDefaults().synchronize();
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+            }        }
+            }        }
+        if (userPasswordStored != userPassword) {
+
+            displayMyAlertMessage("Username or Password incorrect");
+
+            return;
+
+        }*/
+        }
+        }
+        }    }
+        }    }
+        func displayMyAlertMessage(userMessage:String) {
+
+            let myAlert = UIAlertController(title:"Alert",
+            message:userMessage, preferredStyle:
+            UIAlertControllerStyle.Alert); let okAction =
+            UIAlertAction(title:"Ok", style:UIAlertActionStyle.Default,
+            handler:nil);
+
+            myAlert.addAction(okAction);
+
+            self.presentViewController(myAlert, animated: true,
+            completion: nil)
+
+        }
+        }
+        }
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) { if segue.identifier == "loginIdentifier" { let
+    secondVC: MyDoneDealViewController = segue.destinationViewController
+    as! MyDoneDealViewController
+
+            secondVC.receivedString = userEmailTextField.text!
+        }
+        }
+        }
+        }    }
+        }    }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+
+
+	Register
+
+//
+//  RegisterPageViewController.swift DDProto
+// //
+//  Created by joe on 10/02/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class RegisterPageViewController: UIViewController {
+
+    @IBOutlet weak var userEmailTextField: UITextField! @IBOutlet weak
+    var userPasswordTextField: UITextField! @IBOutlet weak var
+    repeatPasswordTextField: UITextField!
+
+    override func viewDidLoad() { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        //     }
+        //     }
+    override func touchesBegan(touches: Set<UITouch>, withEvent event:
+    UIEvent?) { self.view.endEditing(true)
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    @IBAction func registerButtonTapped(sender: AnyObject) {
+
+        _ = userEmailTextField.text; _ = userPasswordTextField.text; _ =
+        repeatPasswordTextField.text;
+
+        self.userEmailTextField.resignFirstResponder()
+        self.userPasswordTextField.resignFirstResponder()
+        self.repeatPasswordTextField.resignFirstResponder()
+
+        //Check for empty fields
+        //
+        //if (userEmailTextField.isEmpty ||
+        //(userPasswordTextField.isEmpty) ||
+        //(repeatPasswordTextField.isEmpty) {
+        //
+        if userEmailTextField.text == "" || userPasswordTextField.text
+        == "" || repeatPasswordTextField.text == "" {
+            //Do Something
+            displayMyAlertMessage("All fields are required");
+
+            return;
+
+        }
+        }
+        }
+        // Check if passwords match
+        // 
+    if userPasswordTextField.text != repeatPasswordTextField.text {
+
+    displayMyAlertMessage("Passwords must match");
+
+        return;
+
+    }
+    }
+        //Store Data locally
+        /*
+        /
+        NSUserDefaults.standardUserDefaults().setObject(
+        userEmailTextField.text, forKey: "userEmail");
+        NSUserDefaults.standardUserDefaults().setObject(
+        userPasswordTextField.text, forKey: "userPassword");
+        NSUserDefaults.standardUserDefaults().synchronize(); */
+
+        //Store Data
+        //
+        let myUrl = NSURL(string:
+        "http://192.168.33.10:80/userRegister.php"); let request =
+        NSMutableURLRequest(URL:myUrl!); request.HTTPMethod = "POST";
+
+        let postString =
+        "email=\(userEmailTextField.text)&password=\(
+        userPasswordTextField.text)"; request.HTTPBody =
+        postString.dataUsingEncoding(NSUTF8StringEncoding);
+
+
+
+        let task =
+        NSURLSession.sharedSession().dataTaskWithRequest(request) {
+
+            data, response, error in
+
+            if error != nil { print("error=\(error)") return
+
+            }
+            }
+            //var err: AutoreleasingUnsafeMutablePointer<NSError?> = nil
+            do { if let json = try
+            NSJSONSerialization.JSONObjectWithData(data!, options:
+            NSJSONReadingOptions.MutableContainers) as? NSDictionary {
+            let resultValue = json["status"] as? String print("result:
+            \(resultValue)")
+
+                    var isUserRegistered:Bool = false;
+                    if(resultValue=="Success") {
+
+                        isUserRegistered = true;
+
+                    }
+                    }
+                    var messageToDisplay:String = json["message"] as!
+                    String!; if(!isUserRegistered) {
+
+                        messageToDisplay = json["message"] as! String;
+                    }
+                    }
+                    dispatch_async(dispatch_get_main_queue(), {
+
+                        let myAlert = UIAlertController(title:"Alert",
+                        message:messageToDisplay, preferredStyle:
+                        UIAlertControllerStyle.Alert);
+
+                        let okAction = UIAlertAction(title:"Ok",
+                        style:UIAlertActionStyle.Default) {
+
+                            action in
+                            self.dismissViewControllerAnimated(true,
+                            completion:nil)
+
+                        }
+                        }
+                        myAlert.addAction(okAction) ;
+                        self.presentViewController(myAlert,
+                        animated:true, completion:nil)
+
+
+
+                    });
+                    }                }
+            } catch let err as NSError {
+                print(err.code)
+            }
+            //var json = NSJSONSerialization.JSONObjectWithData(data,
+            //options: NSJSONReadingOptions.MutableContainers, error:
+            //err) as? NSDictionary
+            //
+            //
+            //
+            //        }
+            //        }
+            //        }
+        task.resume()
+
+        // Display alert message with confirmation
+        // 
+        /*
+        /
+        let myAlert = UIAlertController(title:"Alert",
+        message:"Registration successful \n Enjoy DoneDealing!!",
+        preferredStyle: UIAlertControllerStyle.Alert);
+
+        let okAction = UIAlertAction(title:"Ok",
+        style:UIAlertActionStyle.Default) {
+
+            action in self.dismissViewControllerAnimated(true,
+            completion:nil)
+
+        }
+        }
+        myAlert.addAction(okAction) ;
+        self.presentViewController(myAlert, animated:true,
+        completion:nil) */
+
+}
+}
+func displayMyAlertMessage(userMessage:String) {
+
+    let myAlert = UIAlertController(title:"Alert", message:userMessage,
+    preferredStyle: UIAlertControllerStyle.Alert); let okAction =
+    UIAlertAction(title:"Ok", style:UIAlertActionStyle.Default,
+    handler:nil);
+
+    myAlert.addAction(okAction);
+
+    self.presentViewController(myAlert, animated: true, completion: nil)
+
+}
+}
+/*func displayMyAlertMessage(userMessage:String) {
+/
+            var myAlert = UIAlertController(title:"Alert",
+            message:userMessage, preferredStyle:
+            UIAlertControllerStyle.Alert);
+
+            let okAction = UIAlertAction(title:"Ok",
+            style:UIAlertActionStyle.Default, handler:nil);
+
+            myAlert.addAction(okAction);
+
+            self.presentViewController(myAlert, animated:true,
+            completion:nil); */
+
+}
+
+	More
+	
+//
+//  MoreViewController.swift DDProto
+// //
+//  Created by joe on 13/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class MoreViewController: UIViewController {
+
+    @IBOutlet weak var helpButton: UIButton!
+
+    @IBOutlet weak var loginButton: UIButton!
+
+
+    override func viewDidLoad() { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        //     }
+        //     }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+
+	Help
+
+//
+//  HelpViewController.swift DDProto
+// //
+//  Created by joe on 13/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class HelpViewController: UIViewController {
+
+
+    @IBOutlet weak var safetyButton: UIButton! @IBOutlet weak var
+    legalButton: UIButton! @IBOutlet weak var privacyButton: UIButton!
+    @IBOutlet weak var contactSupportButton: UIButton! @IBOutlet weak
+    var buyingButton: UIButton! @IBOutlet weak var sellingButton:
+    UIButton! @IBOutlet weak var commonQuestionsButton: UIButton!
+    @IBOutlet weak var facebookButton: UIButton! @IBOutlet weak var
+    twitterButton: UIButton! @IBOutlet weak var blogButton: UIButton!
+
+
+
+    override func viewDidLoad() { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        //     }
+        //     }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+
+	Safety
+
+//
+//  SafetyWebViewController.swift DDProto
+// //
+//  Created by joe on 09/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class SafetyWebViewController: UIViewController {
+
+
+    @IBOutlet weak var safetyWebView: UIWebView!
+
+    override func viewDidLoad() { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        // 
+        let myURL = NSURL(string:
+        "https://hello.donedeal.ie/hc/en-us/categories/200184891-Stay-
+        Safe")
+
+        let myURLRequest:NSURLRequest = NSURLRequest(URL: myURL!);
+        safetyWebView.loadRequest(myURLRequest);
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+}
+}//
+//  LegalWebViewController.swift DDProto
+// //
+//  Created by joe on 09/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class LegalWebViewController: UIViewController {
+
+    @IBOutlet weak var legalWebView: UIWebView! override func
+    viewDidLoad() { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        // 
+        let myURL = NSURL(string:
+        "https://hello.donedeal.ie/hc/en-us/sections/200382672-Legal-
+        Policies")
+
+        let myURLRequest:NSURLRequest = NSURLRequest(URL: myURL!);
+        legalWebView.loadRequest(myURLRequest);
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+}
+	Legal
+
+//
+//  LegalWebViewController.swift DDProto
+// //
+//  Created by joe on 09/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class LegalWebViewController: UIViewController {
+
+    @IBOutlet weak var legalWebView: UIWebView! override func
+    viewDidLoad() { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        // 
+        let myURL = NSURL(string:
+        "https://hello.donedeal.ie/hc/en-us/sections/200382672-Legal-
+        Policies")
+
+        let myURLRequest:NSURLRequest = NSURLRequest(URL: myURL!);
+        legalWebView.loadRequest(myURLRequest);
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+}
+	Privacy
+
+//
+//  PrivacyWebViewController.swift DDProto
+// //
+//  Created by joe on 09/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class PrivacyWebViewController: UIViewController {
+
+    @IBOutlet var privacyWebView: UIWebView! override func viewDidLoad()
+    { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        // 
+        let myURL = NSURL(string:
+        "https://hello.donedeal.ie/hc/en-us/articles/201251721-Privacy-
+        Policy")
+
+        let myURLRequest:NSURLRequest = NSURLRequest(URL: myURL!);
+        privacyWebView.loadRequest(myURLRequest);
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+}
+	Contact Support
+
+//
+//  ContactSupportViewController.swift DDProto
+// //
+//  Created by joe on 09/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class ContactSupportViewController: UIViewController {
+
+    @IBOutlet weak var contactSupportWebView: UIWebView! override func
+    viewDidLoad() { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        // 
+        let myURL = NSURL(string:
+        "https://hello.donedeal.ie/hc/en-us/requests/new")
+
+        let myURLRequest:NSURLRequest = NSURLRequest(URL: myURL!);
+        contactSupportWebView.loadRequest(myURLRequest);
+    }
+    }
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+}
+	Buying
+
+//
+//  BuyingViewController.swift DDProto
+// //
+//  Created by joe on 09/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class BuyingViewController: UIViewController {
+
+    @IBOutlet weak var buyingWebView: UIWebView! override func
+    viewDidLoad() { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        // 
+        let myURL = NSURL(string:
+        "https://hello.donedeal.ie/hc/en-us/categories/200620172-Buying"
+        )
+
+        let myURLRequest:NSURLRequest = NSURLRequest(URL: myURL!);
+        buyingWebView.loadRequest(myURLRequest);
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+}
+	Selling
+
+//
+//  SellingViewController.swift DDProto
+// //
+//  Created by joe on 09/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class SellingViewController: UIViewController {
+
+    @IBOutlet weak var sellingWebView: UIWebView! override func
+    viewDidLoad() { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        // 
+        let myURL = NSURL(string:
+        "https://hello.donedeal.ie/hc/en-us/categories/200599651-Selling
+        ")
+
+        let myURLRequest:NSURLRequest = NSURLRequest(URL: myURL!);
+        sellingWebView.loadRequest(myURLRequest);
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+}
+	Common Questions
+
+//
+//  SellingViewController.swift DDProto
+// //
+//  Created by joe on 09/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class SellingViewController: UIViewController {
+
+    @IBOutlet weak var sellingWebView: UIWebView! override func
+    viewDidLoad() { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        // 
+        let myURL = NSURL(string:
+        "https://hello.donedeal.ie/hc/en-us/categories/200599651-Selling
+        ")
+
+        let myURLRequest:NSURLRequest = NSURLRequest(URL: myURL!);
+        sellingWebView.loadRequest(myURLRequest);
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+}
+	Facebook
+
+//
+//  FacebookViewController.swift DDProto
+// //
+//  Created by joe on 09/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class FacebookViewController: UIViewController {
+
+    @IBOutlet weak var facebookWebView: UIWebView! override func
+    viewDidLoad() { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        // 
+        let myURL = NSURL(string:
+        "https://www.facebook.com/DoneDealIreland")
+
+        let myURLRequest:NSURLRequest = NSURLRequest(URL: myURL!);
+        facebookWebView.loadRequest(myURLRequest);
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+}
+	Twitter
+
+//
+//  TwitterViewController.swift DDProto
+// //
+//  Created by joe on 09/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class TwitterViewController: UIViewController {
+
+    @IBOutlet weak var twitterWebView: UIWebView! override func
+    viewDidLoad() { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        // 
+        let myURL = NSURL(string: "https://twitter.com/donedeal")
+
+        let myURLRequest:NSURLRequest = NSURLRequest(URL: myURL!);
+        twitterWebView.loadRequest(myURLRequest);
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+}
+	Blog
+
+//
+//  BlogViewController.swift DDProto
+// //
+//  Created by joe on 09/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class BlogViewController: UIViewController {
+
+    @IBOutlet weak var blogWebView: UIWebView! override func
+    viewDidLoad() { super.viewDidLoad()
+
+        // Do any additional setup after loading the view.
+        // 
+        let myURL = NSURL(string: "https://blog.donedeal.ie/")
+
+        let myURLRequest:NSURLRequest = NSURLRequest(URL: myURL!);
+        blogWebView.loadRequest(myURLRequest);
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+}
+
+	My DoneDeal
+	
+//
+//  MyDoneDealViewController.swift DDProto
+// //
+//  Created by joe on 10/02/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit
+
+class MyDoneDealViewController: UIViewController {
+
+    @IBOutlet weak var emailLabel: UILabel! var receivedString: String =
+    "" override func viewDidLoad() { super.viewDidLoad()
+
+        emailLabel.text = receivedString
+
+        // Do any additional setup after loading the view.
+        //     }
+        //     }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+    override func viewDidAppear(animated: Bool) {
+
+        let isUserLoggedIn =
+        NSUserDefaults.standardUserDefaults().boolForKey("isUserLoggedIn
+        ");
+
+        if (!isUserLoggedIn) {
+        self.performSegueWithIdentifier("logoutView", sender: self)
+
+        }
+        }
+        }    }
+        }    }
+        }    }
+    @IBAction func logoutButtonTapped(sender: AnyObject) {
+
+        NSUserDefaults.standardUserDefaults().setBool(false, forKey:
+        "isUserLoggedIn");
+        NSUserDefaults.standardUserDefaults().synchronize();
+
+        self.performSegueWithIdentifier("logoutView", sender: self);
+    }
+    /*
+    // MARK: - Navigation
+    // 
+    // In a storyboard-based application, you will often want to do a
+    // little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender:
+    AnyObject?) {
+        // Get the new view controller using
+        // segue.destinationViewController. Pass the selected object to
+        // the new view controller.
+        //     }
+    */
+
+
+
+}
+
+	Ad Browser
+
+//
+//  AdBrowserViewController.swift DDProto
+// //
+//  Created by joe on 11/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+// ////
+//  AdBrowser.swift DDProto
+// //
+//  Created by joe on 04/04/2016. Copyright © 2016 Joe O'Leary. All
+//  rights reserved.
+// //
+// //
+import UIKit import Alamofire
+
+struct Ad { let id: Int let header: String let description: String let
+price: String let county: String let currency: String let age: String
+let adPhoto: AdPhoto?
+}
+}
+struct AdPhoto { let id: Int let large: String?
+}
+}
+}
+class AdBrowserViewController: UIViewController {
+
+
+    @IBOutlet weak var adBrowserCollectionView: UICollectionView!
+    @IBOutlet weak var searchBar: UISearchBar!
+
+
+
+    var adModels = [Ad]() // array of ad models that the collection view
+    will use to build up the UI var adPrice = ""
+
+    override func viewDidLoad() { super.viewDidLoad()
+        // Do any additional setup after loading the view, typically
+        // from a nib.
+        // 
+        setupCellSize() setupSearchAccessoryView()
+        fetchSearchResultsWithText(searchText: nil)
+
+
+
+    }
+    }
+    override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+        //     }
+        //     }
+        //     }
+    func setupCellSize(){
+
+        //let width = (CGRectGetWidth(collectionView!.frame) / 3) - 10
+        let layout = adBrowserCollectionView.collectionViewLayout as!
+        UICollectionViewFlowLayout layout.itemSize = CGSize(width: 170,
+        height: 200)
+    }
+    }
+    func setupSearchAccessoryView(){ let keyboardToolbar =
+    UIToolbar(frame: CGRectMake(0, 0,
+    UIScreen.mainScreen().bounds.size.width, 44)) let flexi =
+    UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil,
+    action: nil) let doneButton = UIBarButtonItem(title: "Done", style:
+    .Plain, target: self, action: "keyboardDoneTapped:")
+    keyboardToolbar.items = [flexi, doneButton]
+    searchBar.inputAccessoryView = keyboardToolbar
+    }
+    }
+    }
+    func fetchSearchResultsWithText(searchText searchText: String?){
+
+        // a new search has been started.  Clear out anything we have
+        // saved in the adModels array
+        self.adModels.removeAll()
+
+        let urlString = "https://api.donedeal.ie/search/api/v3/find/"
+        var requestParams: [String: AnyObject] = [ "start": 0, "max":
+        40, "section": "all", "startTime":
+        "\(Int64(NSDate().timeIntervalSince1970 * 1000))"   // this
+        creates a timestamp of when the search request was made.  this
+        is needed by the api
+        ]
+        ]
+        if let searchText = searchText where searchText != "" {
+        requestParams["words"] = searchText
+        }
+        }
+        Alamofire.request(.POST, urlString, parameters: requestParams,
+        encoding: .JSON) .responseJSON { response in if let JSON =
+        response.result.value as? [String: AnyObject], ads = JSON["ads"]
+        as? [[String: AnyObject]] { self.parseSearchResults(ads)
+        self.adBrowserCollectionView.reloadData()
+                }
+                }        }
+                }        }    }
+                }        }    }
+    func parseSearchResults(searchResults: [[String: AnyObject]]) {
+
+        func parsePhotoObject(photosJSON: [[String: AnyObject]]?) ->
+        AdPhoto? { if let photosJSON = photosJSON { let firstPhoto =
+        photosJSON[0] if let id = firstPhoto["id"] as? Int, large =
+        firstPhoto["large"] as? String { let photo = AdPhoto(id: id,
+        large: large) return photo
+                }
+                }            }
+            return nil
+        }
+        }
+        var adModels = [Ad]() for result in searchResults { if let adid
+        = result["id"] as? Int, header = result["header"] as? String,
+        price = result["price"] as? String, county = result["county"]
+        as? String, currency = result["currency"] as? String, age =
+        result["age"] as? String, adDescription = result["description"]
+        as? String{ let photosArray: [[String: AnyObject]]? =
+        result["photos"] as? [[String: AnyObject]] if currency == "EUR"
+        { adPrice = "€" + price
+                    }
+                    }
+                    let ad = Ad(id: adid, header: header, description:
+                    adDescription, price: adPrice, county: county,
+                    currency: currency, age: age, adPhoto:
+                    parsePhotoObject(photosArray)) adModels.append(ad)
+            }
+            }        }
+        self.adModels = adModels
+    }
+    }
+    func keyboardDoneTapped(sender: AnyObject) {
+    searchBar.resignFirstResponder()
+    }
+    }
+    }}
+    }}
+    }}
+extension AdBrowserViewController: UICollectionViewDataSource,
+UICollectionViewDelegate {
+
+    func numberOfSectionsInCollectionView(collectionView:
+    UICollectionView) -> Int { return 1
+    }
+    }
+    func collectionView(collectionView: UICollectionView,
+    numberOfItemsInSection section: Int) -> Int { return
+    self.adModels.count
+    }
+    }
+    func collectionView(collectionView: UICollectionView,
+    cellForItemAtIndexPath indexPath: NSIndexPath) ->
+    UICollectionViewCell { let cell =
+    collectionView.dequeueReusableCellWithReuseIdentifier("AdCell",
+    forIndexPath: indexPath) as! AdCell cell.tag = indexPath.row let
+    adModel = self.adModels[indexPath.row] cell.adTitleLabel.text =
+    adModel.header cell.adPriceLabel.text = adModel.price
+    cell.adLocationLabel.text = adModel.county
+    cell.loadImage(adModel.adPhoto?.large, tag: indexPath.row)
+    cell.adAgeLabel.text = adModel.age
+        //cell.adImageView
+        //
+        return cell
+    }
+    }}
+    }}
+    }}
+    }}
+extension AdBrowserViewController: UISearchBarDelegate { func
+searchBarSearchButtonClicked(searchBar: UISearchBar) {
+fetchSearchResultsWithText(searchText: searchBar.text)
+
+        // this method is triggered when the search button is pressed
+        // the line below will resign the keyboard for you
+        searchBar.resignFirstResponder()
+    }
+    }}
+    }}
+extension AdBrowserViewController { override func prepareForSegue(segue:
+UIStoryboardSegue, sender: AnyObject?) {
+
+        if segue.identifier == "AdDetailsSegue" { if let adCell = sender
+        as? AdCell {
+                // 1. get the indexPath of the cell
+                let indexPath =
+                self.adBrowserCollectionView.indexPathForCell(adCell) if
+                let row = indexPath?.row where row < self.adModels.count
+                 {
+                    // 2. get the model for the selected cell
+                    let adModel = self.adModels[row]
+
+                    // 3. get a reference to the viewController we're
+                    // moving to
+                    let adDetailsViewController =
+                    segue.destinationViewController as?
+                    AdDetailsViewController
+
+                    // 4. pass in the ad id into the
+                    // adDetailsViewController
+                    adDetailsViewController?.adId = adModel.id
+                }
+                }            }
+                }            }        }
+                }            }        }    }
+                }            }        }    }}
+                
+	Unused Collection View Files
+	
+	Annotated Photo Cell
+	
+	//
+//  AnnotatedPhotoCell.swift
+//  DDProto
+//
+//  Created by Joe O'Leary on 18/02/2016.
+//  Copyright © 2015 Joe O'Leary. All rights reserved.
+//
+
+import UIKit
+
+class AnnotatedPhotoCell: UICollectionViewCell {
+  
+  @IBOutlet private weak var imageView: UIImageView!
+  @IBOutlet private weak var imageViewHeightLayoutConstraint: NSLayoutConstraint!
+  @IBOutlet private weak var adTitleLabel: UILabel!
+  @IBOutlet private weak var priceLabel: UILabel!
+  @IBOutlet private weak var locationLabel: UILabel!
+  
+  var photo: Photo? {
+    didSet {
+      if let photo = photo {
+        imageView.image = photo.image
+        adTitleLabel.text = photo.adTitle
+        priceLabel.text = photo.price
+        locationLabel.text = photo.location
+      }
+    }
+  }
+    
+    override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes) {
+        super.applyLayoutAttributes(layoutAttributes)
+        let attributes = layoutAttributes as! AdListLayoutAttributes
+        imageViewHeightLayoutConstraint.constant = attributes.photoHeight
+    }
+  
+}
+
+	Rounded Corners View
+	
+//
+//  RoundedCornersView.swift
+//  DDProto
+//
+//  Created by Joe O'Leary on 18/02/2016.
+//  Copyright © 2015 Joe O'Leary. All rights reserved.
+//
+
+import UIKit
+
+@IBDesignable
+class RoundedCornersView: UIView {
+  @IBInspectable var cornerRadius: CGFloat = 0 {
+    didSet {
+      layer.cornerRadius = cornerRadius
+      layer.masksToBounds = cornerRadius > 0
+    }
+  }
+}
+
+	Ads List
+
+//
+//  AdsListLayout.swift
+//  DDProto
+//
+//  Created by joe on 31/03/2016.
+//  Copyright © 2016 Joe O'Leary. All rights reserved.
+//
+
+import UIKit
+
+protocol AdsListLayoutDelegate {
+
+    func collectionView(collectionView: UICollectionView,
+    heightForPhotoAtIndexPath indexPath: NSIndexPath, withWidth width:
+    CGFloat) -> CGFloat
+
+    func collectionView(collectionView: UICollectionView,
+    heightForAnnotationAtIndexPath indexPath: NSIndexPath, withWidth
+    width: CGFloat) -> CGFloat
+}
+}
+class AdListLayoutAttributes: UICollectionViewLayoutAttributes {
+
+    var photoHeight: CGFloat = 0
+
+    override func copyWithZone(zone: NSZone) -> AnyObject { let copy =
+    super.copyWithZone(zone) as! AdListLayoutAttributes copy.photoHeight
+    = photoHeight return copy
+    }
+    }
+    override func isEqual(object: AnyObject?) -> Bool { if let
+    attributes = object as? AdListLayoutAttributes { if
+    attributes.photoHeight == photoHeight { return super.isEqual(object)
+            }
+            }        }
+            }        }
+        return false
+    }
+    }}
+    }}
+class AdsListLayout: UICollectionViewLayout {
+
+    var cellPadding: CGFloat = 0 var delegate: AdsListLayoutDelegate!
+    var numberOfColumns = 1
+
+    private var cache = [AdListLayoutAttributes]() private var
+    contentHeight: CGFloat = 0 private var width: CGFloat { get { let
+    insets = collectionView!.contentInset return
+    CGRectGetWidth(collectionView!.bounds) - (insets.left + insets.right)
+        }
+        }    }
+        }    }
+    override class func layoutAttributesClass() -> AnyClass { return
+    AdListLayoutAttributes.self
+    }
+    }
+    }
+override func collectionViewContentSize() -> CGSize {
+
+    return CGSize(width: width, height: contentHeight)
+}
+    override func prepareLayout() { if cache.isEmpty {
+
+            let columnWidth = width / CGFloat(numberOfColumns)
+
+            var xOffsets = [CGFloat]() for column in 0..<numberOfColumns
+            { xOffsets.append(CGFloat(column) * columnWidth)
+            }
+            }
+            var yOffsets = [CGFloat](count: numberOfColumns,
+            repeatedValue: 0)
+
+            var column = 0 for item in
+            0..<collectionView!.numberOfItemsInSection(0) { let
+            indexPath = NSIndexPath(forItem: item, inSection: 0)
+
+                let width =  columnWidth - (cellPadding * 2) let
+                photoHeight = delegate.collectionView(collectionView!,
+                heightForPhotoAtIndexPath: indexPath, withWidth: width)
+
+
+                let annotationHeight =
+                delegate.collectionView(collectionView!,
+                heightForAnnotationAtIndexPath: indexPath, withWidth:
+                width)
+
+                let height = cellPadding + photoHeight +
+                annotationHeight + cellPadding
+
+                let frame = CGRect(x: xOffsets[column], y:
+                yOffsets[column], width: columnWidth, height: height)
+                let insetFrame = CGRectInset(frame, cellPadding,
+                cellPadding) let attributes =
+                AdListLayoutAttributes(forCellWithIndexPath: indexPath)
+                attributes.frame = insetFrame attributes.photoHeight =
+                photoHeight cache.append(attributes) contentHeight =
+                max(contentHeight, CGRectGetMaxY(frame))
+                yOffsets[column] = yOffsets[column] + height column =
+                column >= (numberOfColumns - 1) ? 0 : ++column
+
+            }
+            }
+            }        }
+            }        }    }
+            }        }    }
+    override func layoutAttributesForElementsInRect(_rect: CGRect) ->
+    [UICollectionViewLayoutAttributes]? { var layoutAttributes =
+    [UICollectionViewLayoutAttributes]() for attributes in cache { if
+    CGRectIntersectsRect(attributes.frame, _rect) {
+    layoutAttributes.append(attributes)
+            }
+            }        }
+            }        }
+        return layoutAttributes
+
+	Photo
+
+//
+//  Photo.swift DDProto
+// //
+//  Created by Joe O'Leary on 18/02/2016. Copyright © 2015 Joe O'Leary.
+//  All rights reserved.
+// //
+// //
+import UIKit
+
+class Photo {
+
+  class func allPhotos() -> [Photo] { var photos = [Photo]() if let URL
+  = NSBundle.mainBundle().URLForResource("Photos", withExtension:
+  "plist") { if let photosFromPlist = NSArray(contentsOfURL: URL) { for
+  dictionary in photosFromPlist { let photo = Photo(dictionary:
+  dictionary as! NSDictionary) photos.append(photo)
+        }
+        }      }
+        }      }    }
+    return photos
+  }
+  }
+  var adTitle: String var adDetails: String var price: String var
+  location: String var image: UIImage
+
+    init(adTitle: String, adDetails: String, price: String, location:
+    String, image: UIImage) { self.adTitle = adTitle self.adDetails =
+    adDetails self.price = price self.location = location self.image =
+    image
+  }
+  }
+  convenience init(dictionary: NSDictionary) { let adTitle =
+  dictionary["Ad Title"] as? String let adDetails = dictionary["Ad
+  Details"] as? String let price = dictionary["Price"] as? String let
+  location = dictionary["Location"] as? String let photo =
+  dictionary["Photo"] as? String let image = UIImage(named:
+  photo!)?.decompressedImage self.init(adTitle: adTitle!, adDetails:
+  adDetails!, price: price!, location: location!, image: image!)
+  }
+  }
+  func heightForComment(font: UIFont, width: CGFloat) -> CGFloat { let
+  rect = NSString(string: adTitle).boundingRectWithSize(CGSize(width:
+  width, height: CGFloat(MAXFLOAT)), options: .UsesLineFragmentOrigin,
+  attributes: [NSFontAttributeName: font], context: nil) return
+  ceil(rect.height)
+  }
+  }
+  }}
+  }}
+	Photo Stream
+
+//
+//  PhotoStreamViewController.swift DDProto
+// //
+//  Created by Joe O'Leary on 18/02/2016. Copyright © 2015 Joe O'Leary.
+//  All rights reserved.
+// //
+// //
+import UIKit import AVFoundation
+
+class PhotoStreamViewController: UICollectionViewController {
+
+    /*
+  var colors: [UIColor] { get { var colors = [UIColor]() let palette =
+  [UIColor.redColor(), UIColor.greenColor(), UIColor.blueColor(),
+  UIColor.orangeColor(), UIColor.purpleColor(), UIColor.yellowColor()]
+  var paletteIndex = 0 for i in 0..<photos.count {
+  colors.append(palette[paletteIndex]) paletteIndex = paletteIndex ==
+  (palette.count - 1) ? 0 : ++paletteIndex
+      }
+      return colors
+    }
+  } */
+  var photos = Photo.allPhotos()
+
+  override func preferredStatusBarStyle() -> UIStatusBarStyle { return
+  UIStatusBarStyle.LightContent
+  }
+  }
+  override func viewDidLoad() { super.viewDidLoad()
+
+    /*if let patternImage = UIImage(named: "Pattern") {
+      view.backgroundColor = UIColor(patternImage: patternImage)
+    }*/
+    }
+    // collectionView!.backgroundColor = UIColor.clearColor()
+    collectionView!.contentInset = UIEdgeInsets(top: 23, left: 5,
+    bottom: 10, right: 5)
+
+    let layout = collectionViewLayout as! AdsListLayout
+    layout.cellPadding = 5 layout.delegate = self layout.numberOfColumns
+    = 2
+
+  }
+  }
+  }}
+  }}
+extension PhotoStreamViewController {
+
+  override func collectionView(collectionView: UICollectionView,
+  numberOfItemsInSection section: Int) -> Int { return photos.count
+  }
+  }
+  override func collectionView(collectionView: UICollectionView,
+  cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell
+  { let cell =
+  collectionView.dequeueReusableCellWithReuseIdentifier("
+  AnnotatedPhotoCell", forIndexPath: indexPath) as! AnnotatedPhotoCell
+  cell.photo = photos[indexPath.item]
+  //  cell.contentView.backgroundColor = colors[indexPath.item]
+    return cell
+  }
+  }
+  }}
+  }}
+extension PhotoStreamViewController: AdsListLayoutDelegate {
+
+    func collectionView(collectionView: UICollectionView,
+    heightForPhotoAtIndexPath indexPath: NSIndexPath, withWidth width:
+    CGFloat) -> CGFloat { let photo = photos[indexPath.item] let
+    boundingRect = CGRect(x: 0, y: 0, width: width, height:
+    CGFloat(MAXFLOAT)) let rect =
+    AVMakeRectWithAspectRatioInsideRect(photo.image.size, boundingRect)
+    return rect.height
+    }
+    }
+    func collectionView(collectionView: UICollectionView,
+    heightForAnnotationAtIndexPath indexPath: NSIndexPath, withWidth
+    width: CGFloat) -> CGFloat { return 60
+    }
+    }}
+    
+    UIImage & Decompression
+    
+//
+//  UIImage+Decompression.swift
+//  DDProto
+//
+//  Created by joe on 10/02/2016.
+//  Copyright © 2016 Joe O'Leary. All rights reserved.
+//
+
+import UIKit
+
+extension UIImage {
+  
+  var decompressedImage: UIImage {
+    UIGraphicsBeginImageContextWithOptions(size, true, 0)
+    drawAtPoint(CGPointZero)
+    let decompressedImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    return decompressedImage
+  }
+  
+}
+
+	DDinfo.plist
+	
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Lato-Regular.ttf</string>
+		<string>Lato-Bold.ttf</string>
+		<string>Lato-Italic.ttf</string>
+	</array>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This application requires location services to work</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>his application requires location services to work</string>
+	<key>NSLocationWhenInUseUseageDescription</key>
+	<string>App needs location services for stuff</string>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+</dict>
+
+	Photos.plist
+	
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>Ad Title</key>
+		<string>VW Passat</string>
+		<key>Ad Details</key>
+		<string>151 VW Passat. I careful lady (nun) owner.</string>
+		<key>Price</key>
+		<string>€12000</string>
+		<key>Location</key>
+		<string>Wexford</string>
+		<key>Photo</key>
+		<string>01</string>
+	</dict>
+	<dict>
+		<key>Ad Title</key>
+		<string>Racing Bike</string>
+		<key>Ad Details</key>
+		<string>Racing Bike that goes really fast</string>
+		<key>Price</key>
+		<string>€1200</string>
+		<key>Location</key>
+		<string>Tipperary</string>
+		<key>Photo</key>
+		<string>02</string>
+	</dict>
+	<dict>
+		<key>Ad Title</key>
+		<string>VW Wheel Trims</string>
+		<key>Ad Details</key>
+		<string>Beautiful set of VW wheel trims</string>
+		<key>Price</key>
+		<string>€60</string>
+		<key>Location</key>
+		<string>Cork</string>
+		<key>Photo</key>
+		<string>03</string>
+	</dict>
+	<dict>
+		<key>Ad Title</key>
+		<string>Motor Bike</string>
+		<key>Ad Details</key>
+		<string>Top spec motorbike</string>
+		<key>Price</key>
+		<string>€4500</string>
+		<key>Location</key>
+		<string>Galway</string>
+		<key>Photo</key>
+		<string>04</string>
+	</dict>
+	<dict>
+		<key>Ad Title</key>
+		<string>iPad 2</string>
+		<key>Ad Details</key>
+		<string>Immaculate iPad 2. No marks</string>
+		<key>Price</key>
+		<string>€160</string>
+		<key>Location</key>
+		<string>Dublin</string>
+		<key>Photo</key>
+		<string>05</string>
+	</dict>
+	<dict>
+		<key>Ad Title</key>
+		<string>David Bowie Vinyl</string>
+		<key>Ad Details</key>
+		<string>Needs no description</string>
+		<key>Price</key>
+		<string>€50</string>
+		<key>Location</key>
+		<string>Carlow</string>
+		<key>Photo</key>
+		<string>06</string>
+	</dict>
+	<dict>
+		<key>Ad Title</key>
+		<string>Electrtic Guitar</string>
+		<key>Ad Details</key>
+		<string>Waynes World Waynes World Party Time EXCELLENT!!!!!!</string>
+		<key>Price</key>
+		<string>€200</string>
+		<key>Location</key>
+		<string>Mayo</string>
+		<key>Photo</key>
+		<string>07</string>
+	</dict>
+	<dict>
+		<key>Ad Title</key>
+		<string>Bull</string>
+		<key>Ad Details</key>
+		<string>Benny the Bull</string>
+		<key>Price</key>
+		<string>€1250</string>
+		<key>Location</key>
+		<string>Louth</string>
+		<key>Photo</key>
+		<string>08</string>
+	</dict>
+	<dict>
+		<key>Ad Title</key>
+		<string>Office Space to rent</string>
+		<key>Ad Details</key>
+		<string>If you need space this is perfect for you</string>
+		<key>Price</key>
+		<string>€400</string>
+		<key>Location</key>
+		<string>Dublin</string>
+		<key>Photo</key>
+		<string>09</string>
+	</dict>
+	<dict>
+		<key>Ad Title</key>
+		<string>Hall Table</string>
+		<key>Ad Details</key>
+		<string>Need a table for a hall?</string>
+		<key>Price</key>
+		<string>€90</string>
+		<key>Location</key>
+		<string>Offaly</string>
+		<key>Photo</key>
+		<string>10</string>
+	</dict>
+	<dict>
+		<key>Ad Title</key>
+		<string>Stylish Outhouse</string>
+		<key>Ad Details</key>
+		<string>Better than the dog house guys!!</string>
+		<key>Price</key>
+		<string>€2950</string>
+		<key>Location</key>
+		<string>Kerry</string>
+		<key>Photo</key>
+		<string>11</string>
+	</dict>
+	<dict>
+		<key>Ad Title</key>
+		<string>Motor Bike</string>
+		<key>Ad Details</key>
+		<string>Brummm Brummm</string>
+		<key>Price</key>
+		<string>€2490</string>
+		<key>Location</key>
+		<string>Waterford</string>
+		<key>Photo</key>
+		<string>12</string>
+	</dict>
+	<dict>
+		<key>Ad Title</key>
+		<string>6 Man Tent</string>
+		<key>Ad Details</key>
+		<string>House prices, eh?</string>
+		<key>Price</key>
+		<string>€200</string>
+		<key>Location</key>
+		<string>Longford</string>
+		<key>Photo</key>
+		<string>13</string>
+	</dict>
+	<dict>
+		<key>Ad Title</key>
+		<string>MacBook Pro</string>
+		<key>Ad Details</key>
+		<string>Secondhand MacBook Pro</string>
+		<key>Price</key>
+		<string>€450</string>
+		<key>Location</key>
+		<string>Wexford</string>
+		<key>Photo</key>
+		<string>14</string>
+	</dict>
+</array>
+</plist>
+
+	Info.plist
+	
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Lato-Regular.ttf</string>
+		<string>Lato-Bold.ttf</string>
+		<string>Lato-Italic.ttf</string>
+	</array>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This application requires location services to work</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>his application requires location services to work</string>
+	<key>NSLocationWhenInUseUseageDescription</key>
+	<string>App needs location services for stuff</string>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+</dict>
+</plist>
+
+	Gemfile
+	
+	source "https://rubygems.org"
+
+	gem "calabash-cucumber", ">= 0.16", "< 2.0"
+	
+	Podfile
+	
+platform :ios, '9.0'
+
+inhibit_all_warnings!
+use_frameworks!
+
+target 'DDProto' do
+pod 'Alamofire', '~> 3.1.2'
+pod 'AlamofireImage', '2.3.0'
+end
+
+	Testing
+	
+	Sample code for calabash test
+	
+Feature: Running a test
+As an iOS developer
+I want to have a sample feature file
+So I can test the DDproto App
+
+Scenario: Test the Tab-bar items
+	Then I see the text "Search"
+	Then I touch "Search"
+	Then I see the text "My DoneDeal"
+	Then I see the text "Place Ad"
+	Then I touch "Place Ad"
+	Then I see the text "Messages"
+	Then I touch "Messages"
+	Then I see the text "More"
+	Then I touch "More"
+	
+Scenario: Test the Search Tab
+	Then I touch "Place Ad"
+	Then I touch "Add Photos"
+	Then I see the text "Gallery"
+	Then I see the text "Camera"
+	
+Scenario: Test the Place Ad Page & Location Finder
+	Then I touch "Place Ad"
+	Then I touch "Add Photos"
+	Then I see the text "Gallery"
+	Then I see the text "Camera"
+	Then I see the text "Cancel"
+	Then I touch "Cancel"
+	Then I touch "Add Photos"
+	Then I touch "Gallery"
+	Then I touch "Moments"
+	Then I touch "Photos"
+	Then I touch "Cancel"
+	Then I scroll down
+	Then I scroll down
+	Then I touch "Get Location"
+	Then I see the text "Find My Location"
+	Then I see the text "Current Address:"
+	Then I see the text "Current Data Location:"
+	Then I wait to see "Cupertino"
+	Then I see the text "Cupertino"
+	Then I see the text "CA"
+	Then I go back
+	
+Scenario: Test the Messages Tab
+	Then I touch "Messages"
+	Then I see the text "Messages"
+
+Scenario: Test the More Tab
+	Then I touch "More"
+	Then I see the text "Help"
+	Then I see the text "Login"
+	Then I touch "Help"
+	Then I see the text "Support"
+	Then I see the text "Safety"
+	Then I see the text "Legal"
+	Then I see the text "Privacy & Cookies"
+	Then I see the text "Contact Support"
+	Then I see the text "Help & Tips"
+	Then I see the text "Buying"
+	Then I see the text "Selling"
+	Then I see the text "Common Questions"
+	Then I see the text "Social Media"
+	Then I see the text "Facebook"
+	Then I see the text "Twitter"
+	Then I see the text "Blog"
+	Then I touch "Safety"
+	Then I see the text "Safety"
+	Then I go back
+	Then I touch "Legal"
+	Then I see the text "Legal"
+	Then I go back
+	Then I touch "Privacy & Cookies"
+	Then I see the text "Privacy & Cookies"
+	Then I go back
+	Then I touch "Contact Support"
+	Then I see the text "Support"
+	Then I go back
+	Then I wait to see "Buying"
+	Then I touch "Buying"
+	Then I see the text "Buying"
+	Then I go back
+	Then I touch "Selling"
+	Then I see the text "Selling"
+	Then I go back
+	Then I touch "Common Questions"
+	Then I see the text "Common Questions"
+	Then I go back
+	Then I touch "Facebook"
+	Then I see the text "Facebook"
+	Then I go back
+	Then I touch "Twitter"
+	Then I see the text "Twitter"
+	Then I go back
+	Then I touch "Blog"
+	Then I see the text "Blog"
+	Then I go back
+	
+Scenario: Test the Login Page
+	Then I touch "More"
+	Then I see the text "Login"
+	Then I touch "Login"
+	Then I wait to see "Log In"
+	Then I see the text "Email"
+	Then I see the text "Password"
+	Then I see the text "Log In"
+	Then I see the text "I Need To Register"
+	Then I touch "I Need To Register"
+	Then I see the text "Email:"
+	Then I see the text "Password:"
+	Then I see the text "Re-enter Password"
+	Then I see the text "Register"
+	Then I see the text "I already have an account"
+	Then I touch "I already have an account"
+	Then I see the text "Log In"
+	Then I touch "Enter your email"
+	Then I enter "test@email.com" into the "userEmailTextField" input field
+	Then I enter "testPassword" into the "userPasswordTextField" input field

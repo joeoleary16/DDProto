@@ -20,6 +20,17 @@ Scenario: Test the Search Tab
 	Then I see the text "Gallery"
 	Then I see the text "Camera"
 	
+	Scenario: Test the Search Tab
+	Then I touch "Search"
+	Then I touch "Search DoneDeal"
+	Then I enter "user@testmunk.com" into the "searchBar" input field 
+	Then I touch "min"
+	Then I see the text "Ad Details"
+	Then I see the text "Ford"
+	Then I see the text "Camera"
+	
+	
+	
 Scenario: Test the Place Ad Page & Location Finder
 	Then I touch "Place Ad"
 	Then I touch "Add Photos"

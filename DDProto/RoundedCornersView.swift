@@ -1,9 +1,9 @@
 //
 //  RoundedCornersView.swift
-//  RWDevCon
+//  DDProto
 //
-//  Created by Mic Pringle on 26/02/2015.
-//  Copyright (c) 2015 Ray Wenderlich. All rights reserved.
+//  Created by Joe O'Leary on 18/02/2016.
+//  Copyright © 2015 Joe O'Leary. All rights reserved.
 //
 
 import UIKit

@@ -17,6 +17,7 @@ struct AdDet {
     let county: String
     let currency: String
     let age: String
+    let views: Int
     let adDetPhoto: AdDetPhoto?
 }
 
@@ -31,9 +32,14 @@ class AdDetailsViewController: UIViewController {
     // MARK: outlets
     @IBOutlet weak var headerLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var adViews: UILabel!
+
+    @IBOutlet weak var adPhotosView: UIImageView!
     @IBOutlet weak var adDescriptionLabel: UILabel!
     @IBOutlet weak var locationLabel: UILabel!
     @IBOutlet weak var adAge: UILabel!
+    @IBOutlet weak var messageButton: UIButton!
+    @IBOutlet weak var phoneButton: UIButton!
     
     // MARK: vars, lets and the like
     var adId: Int?
@@ -51,22 +57,39 @@ class AdDetailsViewController: UIViewController {
     }
     
     func fetchAdDetails() {
+        
+        func parsePhotoObject(photosJSON: [[String: AnyObject]]?) -> AdDetPhoto? {
+            if let photosJSON = photosJSON {
+                let firstPhoto = photosJSON[0]
+                if let id = firstPhoto["id"] as? Int, large = firstPhoto["large"] as? String {
+                    let photo = AdDetPhoto(id: id, large: large)
+                    return photo
+                }
+            }
+            return nil
+        }
         if let adId = self.adId {
             let urlString = "https://api.donedeal.ie/adview/api/v3/view/ad/\(adId)"
             print(urlString)
             Alamofire.request(.GET, urlString)
                 .responseJSON { response in
                     if let JSON = response.result.value as? [String: AnyObject]{
-                        // you should go to the bother of parsing the JSON object and mapping it's values to a model in a seperate method
-                        // see line 71 and parseSearchResults in the ViewController.swift file
+                        
                         if let header = JSON["header"] as? String,
                             adDescription = JSON["description"] as? String,
                             county = JSON["county"] as? String,
                             price = JSON["price"] as? String,
                             currency = JSON["currency"] as? String,
                             age = JSON["age"] as? String,
+                            views = JSON["views"] as? Int,
                             adId = self.adId {
-                                let adModel = AdDet(id: adId, header: header, description: adDescription, price: price, county: county, currency: currency, age: age, adDetPhoto: nil)
+                                if currency == "EUR" {
+                                    self.adPrice = "€" + price
+                                }
+                                let photosArray: [[String: AnyObject]]? = JSON["photos"] as? [[String: AnyObject]]
+
+                                
+                                let adModel = AdDet(id: adId, header: header, description: adDescription, price: self.adPrice, county: county, currency: currency, age: age, views: views, adDetPhoto: parsePhotoObject(photosArray))
                                 
                             self.updateUI(adModel)
                         }
@@ -82,6 +105,23 @@ class AdDetailsViewController: UIViewController {
         self.locationLabel.text = adModel.county
         self.adAge.text = adModel.age
         self.priceLabel.text = adModel.price
+        self.adViews.text = String (adModel.views)
+        
+
+        
+        
+        
+        if let urlString = adModel.adDetPhoto?.large where urlString != "" {
+            Alamofire.request(.GET, urlString)
+                .responseImage(completionHandler: { response in
+                    if let image = response.result.value {
+                            self.adPhotosView.image = image
+                        
+                    }
+                })
+        }
+
+
     }
     
     

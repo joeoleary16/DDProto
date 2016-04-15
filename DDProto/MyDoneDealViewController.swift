@@ -30,7 +30,7 @@ class MyDoneDealViewController: UIViewController {
         let isUserLoggedIn = NSUserDefaults.standardUserDefaults().boolForKey("isUserLoggedIn");
         
         if (!isUserLoggedIn) {
-            self.performSegueWithIdentifier("loginView", sender: self)
+            self.performSegueWithIdentifier("logoutView", sender: self)
         
         }
        
@@ -42,7 +42,7 @@ class MyDoneDealViewController: UIViewController {
         NSUserDefaults.standardUserDefaults().setBool(false, forKey: "isUserLoggedIn");
         NSUserDefaults.standardUserDefaults().synchronize();
         
-        self.performSegueWithIdentifier("loginView", sender: self);
+        self.performSegueWithIdentifier("logoutView", sender: self);
     }
     /*
     // MARK: - Navigation

@@ -125,7 +125,7 @@ class RegisterPageViewController: UIViewController {
                         myAlert.addAction(okAction) ;
                         self.presentViewController(myAlert, animated:true, completion:nil)
                         
-                        
+                         self.performSegueWithIdentifier("registrationSuccess", sender: self);
                         
                     });
                 }

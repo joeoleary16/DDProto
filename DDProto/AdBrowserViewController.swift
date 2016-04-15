@@ -6,13 +6,6 @@
 //  Copyright © 2016 Joe O'Leary. All rights reserved.
 //
 
-//
-//  AdBrowser.swift
-//  DDProto
-//
-//  Created by joe on 04/04/2016.
-//  Copyright © 2016 Joe O'Leary. All rights reserved.
-//
 
 import UIKit
 import Alamofire
@@ -38,6 +31,7 @@ class AdBrowserViewController: UIViewController {
 
 
     @IBOutlet weak var adBrowserCollectionView: UICollectionView!
+    @IBOutlet weak var searchBar: UISearchBar!
 
     
     
@@ -49,6 +43,7 @@ class AdBrowserViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         setupCellSize()
+        setupSearchAccessoryView()
         fetchSearchResultsWithText(searchText: nil)
         
         
@@ -66,6 +61,14 @@ class AdBrowserViewController: UIViewController {
         //let width = (CGRectGetWidth(collectionView!.frame) / 3) - 10
         let layout = adBrowserCollectionView.collectionViewLayout as! UICollectionViewFlowLayout
         layout.itemSize = CGSize(width: 170, height: 200)
+    }
+    
+    func setupSearchAccessoryView(){
+        let keyboardToolbar = UIToolbar(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 44))
+        let flexi = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Done", style: .Plain, target: self, action: "keyboardDoneTapped:")
+        keyboardToolbar.items = [flexi, doneButton]
+        searchBar.inputAccessoryView = keyboardToolbar
     }
     
     
@@ -129,6 +132,9 @@ class AdBrowserViewController: UIViewController {
         self.adModels = adModels
     }
     
+    func keyboardDoneTapped(sender: AnyObject) {
+        searchBar.resignFirstResponder()
+    }
     
 }
 
@@ -158,9 +164,15 @@ extension AdBrowserViewController: UICollectionViewDataSource, UICollectionViewD
     }
 }
 
+
+
 extension AdBrowserViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         fetchSearchResultsWithText(searchText: searchBar.text)
+        
+        // this method is triggered when the search button is pressed
+        // the line below will resign the keyboard for you
+        searchBar.resignFirstResponder()
     }
 }
 
@@ -185,3 +197,4 @@ extension AdBrowserViewController {
         }
     }
 }
+
